@@ -22,6 +22,8 @@
     "verify:a11y": "node tests/a11y-check.mjs",
     "verify:budget": "node tests/bundle-budget.mjs",
     "verify:bytes": "node tests/control-byte-sweep.mjs",
+    "verify:motion": "node tests/portal-cost.mjs",
+    "shots:portal": "node tests/shot-pair.mjs after",
     "shots": "node tests/screenshots.mjs"
   },
   "dependencies": {

@@ -36,7 +36,22 @@
         </nav>
       </header>
 
-      <main id="main" class="prose">
+      <div class="doc">
+        <nav class="doc__rail" aria-label="On this page">
+          <p class="eyebrow eyebrow--quiet">On this page</p>
+          <ul>
+            <li><a href="#short">The short version</a></li>
+            <li><a href="#claims">What we refuse to claim</a></li>
+            <li><a href="#length">How long is a session</a></li>
+            <li><a href="#stored">What is on this device</a></li>
+            <li><a href="#erase">Erase everything</a></li>
+            <li><a href="#verify">Check it yourself</a></li>
+            <li><a href="#missing">What is deliberately missing</a></li>
+            <li><a href="#who">Who made this</a></li>
+          </ul>
+        </nav>
+
+      <main id="main" class="prose doc__body">
         <h1>For parents</h1>
         <p class="lede">
           This page exists so you can check the claims on this site rather than
@@ -44,7 +59,17 @@
           browser in about a minute, and the last section tells you how.
         </p>
 
-        <h2>The short version</h2>
+        <ul class="glance">
+          <li>No account</li>
+          <li>No analytics</li>
+          <li>No cookies</li>
+          <li>No ads</li>
+          <li>Nothing to spend</li>
+          <li>No streaks</li>
+          <li>Every run ends</li>
+        </ul>
+
+        <h2 id="short">The short version</h2>
         <table class="facts">
           <tbody>
             <tr>
@@ -78,7 +103,7 @@
           </tbody>
         </table>
 
-        <h2>What we claim, and what we refuse to claim</h2>
+        <h2 id="claims">What we claim, and what we refuse to claim</h2>
 
         <!-- claims-negation:start — the panel below is the DISCLAIMER. It names
              each forbidden claim in order to refuse it, which is the one place
@@ -114,7 +139,7 @@
         </div>
         <!-- claims-negation:end -->
 
-        <h2>How long is a session?</h2>
+        <h2 id="length">How long is a session?</h2>
         <p>
           These lengths are read directly from the game's own schedule at the
           moment this page loads, so they cannot drift away from the build:
@@ -132,16 +157,16 @@
           will carry the measured figures and say who measured them.
         </p>
 
-        <h2>Exactly what is on this device right now</h2>
+        <h2 id="stored">Exactly what is on this device right now</h2>
         <p>
           This is not a description of what we store. It is a live read of your
           own browser's local storage for this site, printed as it is:
         </p>
         <div class="panel">
-          <pre id="storageDump" style="white-space:pre-wrap;word-break:break-word;font-family:var(--font-data);font-size:.86rem;margin:0">Reading…</pre>
+          <pre id="storageDump" class="dump">Reading&hellip;</pre>
         </div>
 
-        <h3>Erase everything</h3>
+        <h3 id="erase">Erase everything</h3>
         <p>
           This removes every value the site has stored in this browser,
           including any unreadable leftover copy. It takes effect immediately
@@ -160,7 +185,7 @@
                 type="number"
                 id="gateAnswer"
                 inputmode="numeric"
-                style="min-height:var(--tap);font:inherit;padding:0 .6em;border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--paper);color:var(--ink);width:8em"
+                class="text-input"
               />
               <button type="button" class="btn" id="gateSubmit">Unlock</button>
             </p>
@@ -174,7 +199,7 @@
           </div>
         </div>
 
-        <h2>How to check all of this yourself</h2>
+        <h2 id="verify">How to check all of this yourself</h2>
         <ol>
           <li>
             Open <a href="./harbor-watch.html">Harbor Watch</a>, then open your
@@ -199,7 +224,7 @@
           produced it, so the check can be repeated rather than believed.
         </p>
 
-        <h2>What is deliberately missing</h2>
+        <h2 id="missing">What is deliberately missing</h2>
         <p>
           Some of these are real costs, and we would rather name them than let
           you discover them:
@@ -226,7 +251,7 @@
           </li>
         </ul>
 
-        <h2>Who made this</h2>
+        <h2 id="who">Who made this</h2>
         <p>
           One person, with software agents doing the implementation under
           direction. The gameplay code was written by agents; the feel of the
@@ -238,6 +263,7 @@
           own.
         </p>
       </main>
+      </div>
 
       <footer class="site-footer">
         <div class="footer-links">

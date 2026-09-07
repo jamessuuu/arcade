@@ -177,9 +177,11 @@ export class Shell {
   }
 
   _applyTheme() {
-    const root = document.documentElement;
-    root.dataset.theme = this.settings.theme || "system";
-    root.dataset.contrast = this.settings.contrast || "normal";
+    // One lighting, deliberately: this is a night harbour, and the shell is
+    // the same night as the game. There is no theme switch because there is
+    // no second theme to switch to — a control that reports a state it does
+    // not have would fail the same check the parents page invites.
+    document.documentElement.dataset.contrast = this.settings.contrast || "normal";
   }
 
   announce(text) {
@@ -498,12 +500,6 @@ export class Shell {
          <span class="field__label" id="lbl-contrast">Contrast</span>
          <div class="seg" role="group" aria-labelledby="lbl-contrast">
            ${seg("contrast", [{ value: "normal", label: "Normal" }, { value: "high", label: "High" }], s.contrast)}
-         </div>
-       </div>
-       <div class="field">
-         <span class="field__label" id="lbl-theme">Theme</span>
-         <div class="seg" role="group" aria-labelledby="lbl-theme">
-           ${seg("theme", [{ value: "system", label: "Follow my device" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }], s.theme)}
          </div>
        </div>
        <div class="field">

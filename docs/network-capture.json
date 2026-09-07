@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-07T05:18:58.984Z",
+  "recordedAt": "2026-09-07T06:32:25.823Z",
   "origin": "http://127.0.0.1:4319",
   "note": "Every request the browser made. 'phase' is loading while the page is still coming up, and playing from the moment the game was started. The claim on the parents page is that the playing phase is empty.",
   "pages": {
@@ -13,7 +13,7 @@
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/shell-B9y7Y7op.css",
+        "url": "http://127.0.0.1:4319/assets/shell-BqBu93xO.css",
         "type": "stylesheet"
       }
     ],
@@ -27,19 +27,19 @@
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/parents-CLL_s_Cu.js",
+        "url": "http://127.0.0.1:4319/assets/parents-DVgjCP0f.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/manifest-CZS7xeKZ.js",
+        "url": "http://127.0.0.1:4319/assets/manifest-CWp18Fnt.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/shell-B9y7Y7op.css",
+        "url": "http://127.0.0.1:4319/assets/shell-BqBu93xO.css",
         "type": "stylesheet"
       }
     ],
@@ -53,67 +53,67 @@
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/harborWatch-gcGyo-Qf.js",
+        "url": "http://127.0.0.1:4319/assets/harborWatch-DwNzaDIL.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/manifest-CZS7xeKZ.js",
+        "url": "http://127.0.0.1:4319/assets/manifest-CWp18Fnt.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/shell-B9y7Y7op.css",
+        "url": "http://127.0.0.1:4319/assets/shell-BqBu93xO.css",
         "type": "stylesheet"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/WebGLRenderer-jZGZP2ZB.js",
+        "url": "http://127.0.0.1:4319/assets/WebGLRenderer-DYX6T8sL.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/BufferResource-DzYCqbFQ.js",
+        "url": "http://127.0.0.1:4319/assets/BufferResource-4it8llgT.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/RenderTargetSystem-Bzl-PYYY.js",
+        "url": "http://127.0.0.1:4319/assets/RenderTargetSystem-B8oGPL_E.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/Filter-Bwf-R8Pd.js",
+        "url": "http://127.0.0.1:4319/assets/Filter-C3F0zlF8.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/browserAll-CH6pnXq6.js",
+        "url": "http://127.0.0.1:4319/assets/browserAll-BYRvYqai.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/webworkerAll-CwIdqPn1.js",
+        "url": "http://127.0.0.1:4319/assets/webworkerAll-D-an2Hkl.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/canvasUtils-klLWmA1a.js",
+        "url": "http://127.0.0.1:4319/assets/canvasUtils-YUx-qnb7.js",
         "type": "script"
       },
       {
         "phase": "loading",
         "method": "GET",
-        "url": "http://127.0.0.1:4319/assets/CanvasPool-Oy7jQ8iF.js",
+        "url": "http://127.0.0.1:4319/assets/CanvasPool-BZkI0Xv2.js",
         "type": "script"
       }
     ]

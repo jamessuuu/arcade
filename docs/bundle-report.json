@@ -1,117 +1,117 @@
 {
-  "measuredAt": "2026-09-07T05:22:22.103Z",
+  "measuredAt": "2026-09-07T06:35:04.202Z",
   "budgetBytes": 2097152,
   "pages": {
     "/index.html": {
-      "transferredBytes": 27854,
-      "gzipEquivalentBytes": 7849,
+      "transferredBytes": 42248,
+      "gzipEquivalentBytes": 10905,
       "requests": 2,
-      "loadMs": 31,
-      "interactiveMs": 31
+      "loadMs": 55,
+      "interactiveMs": 55
     },
     "/parents.html": {
-      "transferredBytes": 34449,
-      "gzipEquivalentBytes": 11937,
+      "transferredBytes": 42991,
+      "gzipEquivalentBytes": 13628,
       "requests": 4,
-      "loadMs": 24,
-      "interactiveMs": 24
+      "loadMs": 87,
+      "interactiveMs": 87
     },
     "/harbor-watch.html": {
-      "transferredBytes": 515739,
-      "gzipEquivalentBytes": 154635,
+      "transferredBytes": 523160,
+      "gzipEquivalentBytes": 156216,
       "requests": 12,
-      "loadMs": 76,
-      "interactiveMs": 363
+      "loadMs": 66,
+      "interactiveMs": 237
     }
   },
   "disk": {
-    "rawBytes": 608663,
-    "gzipBytes": 183961,
+    "rawBytes": 623573,
+    "gzipBytes": 187001,
     "files": [
       {
-        "file": "assets\\harborWatch-gcGyo-Qf.js",
-        "bytes": 292255,
-        "gzip": 91588
+        "file": "assets\\harborWatch-DwNzaDIL.js",
+        "bytes": 291960,
+        "gzip": 91528
       },
       {
-        "file": "assets\\WebGLRenderer-jZGZP2ZB.js",
+        "file": "assets\\WebGLRenderer-DYX6T8sL.js",
         "bytes": 72156,
-        "gzip": 19675
+        "gzip": 19670
       },
       {
-        "file": "assets\\RenderTargetSystem-Bzl-PYYY.js",
+        "file": "assets\\RenderTargetSystem-B8oGPL_E.js",
         "bytes": 52577,
-        "gzip": 14504
+        "gzip": 14505
       },
       {
-        "file": "assets\\WebGPURenderer-mmRqdral.js",
+        "file": "assets\\WebGPURenderer-C8cWQQdX.js",
         "bytes": 46095,
-        "gzip": 13272
+        "gzip": 13269
       },
       {
-        "file": "assets\\browserAll-CH6pnXq6.js",
+        "file": "assets\\browserAll-BYRvYqai.js",
         "bytes": 43218,
-        "gzip": 11360
+        "gzip": 11362
       },
       {
-        "file": "assets\\CanvasRenderer-CHA5pT7J.js",
+        "file": "assets\\shell-BqBu93xO.css",
+        "bytes": 21524,
+        "gzip": 5334
+      },
+      {
+        "file": "index.html",
+        "bytes": 20724,
+        "gzip": 5571
+      },
+      {
+        "file": "assets\\CanvasRenderer-D20UnnZf.js",
         "bytes": 17924,
-        "gzip": 6029
+        "gzip": 6030
       },
       {
-        "file": "assets\\webworkerAll-CwIdqPn1.js",
+        "file": "assets\\webworkerAll-D-an2Hkl.js",
         "bytes": 15902,
         "gzip": 5077
       },
       {
-        "file": "index.html",
-        "bytes": 14061,
-        "gzip": 4163
-      },
-      {
-        "file": "assets\\shell-B9y7Y7op.css",
-        "bytes": 13793,
-        "gzip": 3686
-      },
-      {
         "file": "parents.html",
-        "bytes": 12467,
-        "gzip": 4654
+        "bytes": 13293,
+        "gzip": 4707
       },
       {
-        "file": "assets\\BufferResource-DzYCqbFQ.js",
+        "file": "assets\\BufferResource-4it8llgT.js",
         "bytes": 11133,
-        "gzip": 2857
+        "gzip": 2858
       },
       {
-        "file": "assets\\manifest-CZS7xeKZ.js",
-        "bytes": 5812,
-        "gzip": 2389
+        "file": "assets\\manifest-CWp18Fnt.js",
+        "bytes": 5797,
+        "gzip": 2379
       },
       {
-        "file": "assets\\canvasUtils-klLWmA1a.js",
+        "file": "assets\\canvasUtils-YUx-qnb7.js",
         "bytes": 5683,
-        "gzip": 1789
+        "gzip": 1790
       },
       {
-        "file": "assets\\parents-CLL_s_Cu.js",
+        "file": "assets\\parents-DVgjCP0f.js",
         "bytes": 2377,
         "gzip": 1208
       },
       {
         "file": "harbor-watch.html",
         "bytes": 1512,
-        "gzip": 793
+        "gzip": 792
       },
       {
-        "file": "assets\\Filter-Bwf-R8Pd.js",
+        "file": "assets\\Filter-C3F0zlF8.js",
         "bytes": 910,
-        "gzip": 479
+        "gzip": 482
       },
       {
-        "file": "assets\\CanvasPool-Oy7jQ8iF.js",
+        "file": "assets\\CanvasPool-BZkI0Xv2.js",
         "bytes": 788,
-        "gzip": 438
+        "gzip": 439
       }
     ]
   }

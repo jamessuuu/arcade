@@ -50,6 +50,7 @@ export class Loop {
     this.runFrames = 0;
     this.runOver33 = 0;
     this.runOver167 = 0;
+    this.runOver400 = 0;
     this.runWorstMs = 0;
 
     this._raf = 0;
@@ -106,6 +107,10 @@ export class Loop {
     this.runFrames++;
     if (frameMs > 33) this.runOver33++;
     if (frameMs > 16.7) this.runOver167++;
+    // A frame this long is not slowness, it is the browser not drawing at all.
+    // Counted rather than maxed, so one stall reads differently from a window
+    // that spent the run throttled to 1Hz.
+    if (frameMs > 400) this.runOver400++;
     if (frameMs > this.runWorstMs) this.runWorstMs = frameMs;
 
     // Clamp. At timeScale 1 we will pay at most 5 steps (~83ms) of debt in one
@@ -148,6 +153,7 @@ export class Loop {
         frames: this.runFrames,
         over33: this.runOver33,
         over16_7: this.runOver167,
+        over400: this.runOver400,
         worstMs: +this.runWorstMs.toFixed(2),
       },
     };
@@ -159,6 +165,7 @@ export class Loop {
     this.runFrames = 0;
     this.runOver33 = 0;
     this.runOver167 = 0;
+    this.runOver400 = 0;
     this.runWorstMs = 0;
   }
 }

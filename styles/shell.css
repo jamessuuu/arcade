@@ -1,13 +1,38 @@
 /* ============================================================================
    arcade — the shell. Portal chrome, game chrome, and every menu.
 
-   One structural decision drives this whole file: EVERY menu, button, toggle
-   and results panel is real HTML, not canvas. Only the game world is drawn by
-   PixiJS. That is why the keyboard works everywhere, why a screen reader can
-   read the whole shell, why focus rings exist at all, and why the 44px target
-   floor is measurable from the DOM. Menus drawn into a canvas would have cost
-   all four and bought nothing.
+   Two structural decisions drive this whole file.
+
+   1. EVERY menu, button, toggle and results panel is real HTML, not canvas.
+      Only the game world is drawn by PixiJS. That is why the keyboard works
+      everywhere, why a screen reader can read the whole shell, why focus rings
+      exist at all, and why the 44px target floor is measurable from the DOM.
+      Menus drawn into a canvas would have cost all four and bought nothing.
+
+   2. THE PORTAL IS THE SAME NIGHT AS THE GAME. The wrapper used to be a cream
+      document: flat cards, hairline borders, a serif reading face, and two
+      grey slabs where the unbuilt games were. It contradicted the one finished
+      thing it was there to introduce. Everything below rebuilds it on the
+      dusk product surface — a value ladder for depth, one warm light source,
+      motion that responds to being touched, and the lamp from Harbor Watch as
+      the only saturated colour allowed to lead.
+
+   Effect budget, because effects are not free and this project measures rather
+   than assumes (numbers from the polis pass, 2026-09-07):
+     gaussian blur on a shadow layer   58 -> 24 fps   BANNED here
+     mix-blend-mode: overlay           60 -> 47.8     BANNED here
+     backdrop-filter on small chips    60 -> 44.7     BANNED here
+   So every glow in this file is a paint-once radial gradient, every animation
+   moves only `transform` and `opacity`, and the hero scene is plain SVG.
    ========================================================================= */
+
+/* The transition into the game. A cross-document view transition is the whole
+   feature: no script, no router, no library — the browser cross-fades the
+   portal into the harbour when the link is followed, and does nothing at all
+   where it is unsupported. It is turned off under reduced motion below. */
+@view-transition {
+  navigation: auto;
+}
 
 *,
 *::before,
@@ -34,13 +59,36 @@ body {
   }
 }
 
+/* The ambient wash: one fixed radial bloom in the lamp's own hue, low in the
+   sky and slightly off-centre, so the page has a light source instead of a
+   flat fill. Painted once, never animated, no blur filter involved. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      74% 46% at 22% 0%,
+      oklch(from var(--signal-glow) l c h / 11%),
+      transparent 68%
+    ),
+    radial-gradient(
+      58% 40% at 86% 8%,
+      oklch(0.70 0.13 232 / 9%),
+      transparent 72%
+    ),
+    linear-gradient(180deg, oklch(0.19 0.026 260) 0%, var(--paper) 46%);
+}
+
 h1,
 h2,
 h3,
 .display {
   font-family: var(--font-display);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  line-height: 1.14;
+  letter-spacing: -0.018em;
   text-wrap: balance;
   margin: 0;
 }
@@ -58,7 +106,7 @@ a {
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .skip-link {
@@ -66,13 +114,14 @@ a {
   left: var(--s-3);
   top: -100px;
   z-index: 100;
-  background: var(--paper-raised);
-  color: var(--ink);
-  border: 2px solid var(--ink);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 2px solid var(--accent-bright);
   border-radius: var(--radius-sm);
   padding: var(--s-3) var(--s-4);
   font-family: var(--font-display);
-  transition: top 120ms ease;
+  font-weight: 700;
+  transition: top var(--dur-fast) var(--ease-out);
 }
 .skip-link:focus {
   top: var(--s-3);
@@ -91,29 +140,70 @@ a {
   border: 0;
 }
 
+/* --- Entrance. Content that arrives with intent is most of what "designed"
+       feels like; it is also the cheapest motion there is, because it runs
+       once and only touches transform and opacity. ------------------------ */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise var(--dur-slow) var(--ease-out) both;
+}
+.rise-2 {
+  animation-delay: 70ms;
+}
+.rise-3 {
+  animation-delay: 150ms;
+}
+.rise-4 {
+  animation-delay: 230ms;
+}
+
 /* --- Page frame ---------------------------------------------------------- */
 
 .page {
-  max-width: 1120px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: var(--s-5) var(--s-4) var(--s-8);
+  padding: var(--s-5) var(--s-5) var(--s-8);
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: var(--s-4) var(--s-4) var(--s-7);
+  }
+}
+
+.site-header > div:first-child {
+  flex: 1 1 22rem;
+  min-width: 0;
 }
 
 .site-header {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-4);
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   padding-bottom: var(--s-5);
-  border-bottom: 1px solid var(--line);
   margin-bottom: var(--s-6);
+  border-bottom: 1px solid var(--line);
 }
 
 .brandmark {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--s-3);
+  min-height: var(--tap);
+  width: fit-content;
   text-decoration: none;
 }
 .brandmark svg {
@@ -122,17 +212,17 @@ a {
 }
 .brandmark h1,
 .brandmark .wordmark {
-  font-size: clamp(1.6rem, 1.1rem + 1.8vw, 2.3rem);
+  font-size: clamp(1.35rem, 1.05rem + 1.2vw, 1.8rem);
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
   margin: 0;
 }
 .tagline {
   color: var(--ink-soft);
-  margin: var(--s-2) 0 0;
-  font-size: 1rem;
-  max-width: 46ch;
+  margin: 0.2em 0 0;
+  font-size: 0.95rem;
+  max-width: 58ch;
 }
 
 .header-nav {
@@ -163,41 +253,52 @@ a {
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease,
-    transform 120ms ease;
+  box-shadow: inset 0 1px 0 var(--edge-hi);
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 .btn:hover {
-  background: var(--paper-sunk);
-  border-color: var(--ink-soft);
+  background: var(--paper-high);
+  border-color: var(--ink-faint);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-1);
 }
 .btn:active {
   transform: translateY(1px);
 }
 .btn--primary {
   background: var(--accent);
-  border-color: var(--accent);
+  border-color: var(--accent-bright);
   color: var(--accent-ink);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.35),
+    0 0 0 1px oklch(from var(--accent) l c h / 22%),
+    0 10px 30px -12px oklch(from var(--signal-glow) l c h / 55%);
 }
 .btn--primary:hover {
-  background: var(--accent);
-  filter: brightness(1.08);
-  border-color: var(--accent);
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.4),
+    0 0 0 1px oklch(from var(--accent) l c h / 30%),
+    0 14px 38px -12px oklch(from var(--signal-glow) l c h / 75%);
+  transform: translateY(-1px);
 }
 .btn--big {
   min-height: 56px;
-  font-size: 1.1rem;
+  font-size: 1.06rem;
   padding: var(--s-3) var(--s-6);
 }
 .btn[aria-pressed="true"] {
   background: var(--accent-soft);
   border-color: var(--accent);
+  color: var(--ink);
 }
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* --- The game grid ------------------------------------------------------- */
+/* --- Section heads ------------------------------------------------------- */
 
 .section-head {
   display: flex;
@@ -205,98 +306,309 @@ a {
   justify-content: space-between;
   gap: var(--s-4);
   flex-wrap: wrap;
-  margin-bottom: var(--s-4);
+  margin: var(--s-7) 0 var(--s-4);
 }
 .section-head h2 {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 .section-note {
   color: var(--ink-soft);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   margin: 0;
 }
 
-.grid {
-  display: grid;
-  gap: var(--s-4);
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--s-7);
-}
-
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper-raised);
-  overflow: hidden;
-  transition: border-color 140ms ease, transform 140ms ease,
-    box-shadow 140ms ease;
-}
-.card--ready:hover,
-.card--ready:focus-within {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lift);
-}
-.card__art {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: var(--paper-sunk);
-  border-bottom: 1px solid var(--line);
-}
-.card__body {
-  padding: var(--s-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-  flex: 1;
-}
-.card__title {
-  font-size: 1.25rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  margin: 0;
-}
-.card__title a {
-  text-decoration: none;
-}
-.card__title a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-.card__teaser {
+/* An eyebrow: the small mono label that names what a block is. It carries a
+   lit dot rather than a coloured bar down one side. A 4px accent stripe on the
+   edge of a panel was the single most recognisable tell in the old version. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
   font-family: var(--font-data);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-soft);
   margin: 0;
 }
-.card__line {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.98rem;
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px oklch(from var(--accent) l c h / 18%),
+    0 0 12px 2px oklch(from var(--signal-glow) l c h / 45%);
 }
-.card__facts {
+.eyebrow--quiet::before {
+  background: var(--ink-faint);
+  box-shadow: 0 0 0 3px oklch(from var(--ink-faint) l c h / 14%);
+}
+
+/* ==========================================================================
+   THE LEAD. One finished game, shown running rather than described.
+   ========================================================================= */
+
+.lead {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: stretch;
+  border-radius: var(--radius);
+  background-color: var(--paper-raised);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-3);
+  overflow: hidden;
+  transition: box-shadow var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+.lead:hover,
+.lead:focus-within {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-3),
+    0 0 0 1px oklch(from var(--accent) l c h / 28%);
+}
+
+.lead__scene {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  aspect-ratio: 16 / 10;
+  background: oklch(0.10 0.02 264);
+}
+.lead__scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lead__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  background-color: var(--paper-raised);
+  border-left: 1px solid var(--line);
+}
+.lead__title {
+  font-size: clamp(1.9rem, 1.3rem + 2.2vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.lead__line {
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  margin: 0;
+  max-width: 34ch;
+}
+.lead__cta {
+  margin-top: var(--s-2);
+}
+
+/* The specification line. Deliberately mono, deliberately three numbers: it is
+   the most specific thing on the page and specificity is what stops a portal
+   reading as marketing. */
+.spec {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--s-2) var(--s-4);
-  margin: auto 0 0;
-  padding-top: var(--s-3);
-  border-top: 1px solid var(--line);
-  font-size: 0.85rem;
-  color: var(--ink-soft);
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  list-style: none;
   font-family: var(--font-data);
+  font-size: 0.84rem;
+  color: var(--ink-soft);
 }
-.card__facts b {
-  color: var(--ink);
+.spec li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.spec li + li::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  margin-right: 0.55em;
+  transform: translateY(-0.25em);
+}
+.spec b {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 860px) {
+  .lead {
+    grid-template-columns: 1fr;
+  }
+  .lead__scene {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+  .lead__body {
+    padding: var(--s-5);
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* --- The lit harbour, animated. Every rule below moves `transform` or
+       `opacity` only, so the compositor does the work and the main thread
+       stays free. Each loop oscillates around its own rest frame, which is
+       also what a frozen (reduced-motion) render lands on. --------------- */
+
+/* Each loop starts and ends on the element's own base value, so a frozen
+   frame is the rest frame rather than an unstyled one. */
+@keyframes lamp-breathe {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+@keyframes beam-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes glint-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(14px, 0, 0);
+  }
+}
+@keyframes hull-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-7px, -2px, 0);
+  }
+}
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.sc-lamp {
+  opacity: 0.82;
+  animation: lamp-breathe 3.4s var(--ease-out) infinite;
+  transform-box: view-box;
+  transform-origin: 72px 33px;
+}
+.sc-beam {
+  opacity: 0.85;
+  animation: beam-breathe 3.4s var(--ease-out) infinite;
+}
+.sc-glint-a {
+  animation: glint-drift 7s ease-in-out infinite;
+}
+.sc-glint-b {
+  animation: glint-drift 9.5s ease-in-out infinite reverse;
+}
+.sc-glint-c {
+  animation: glint-drift 11s ease-in-out infinite;
+}
+.sc-hull {
+  animation: hull-bob 6.5s ease-in-out infinite;
+}
+.sc-star-a,
+.sc-star-b,
+.sc-star-c {
+  opacity: 0.45;
+}
+.sc-star-a {
+  animation: star-twinkle 4.2s ease-in-out infinite;
+}
+.sc-star-b {
+  animation: star-twinkle 5.8s ease-in-out infinite 0.8s;
+}
+.sc-star-c {
+  animation: star-twinkle 7.1s ease-in-out infinite 1.9s;
+}
+
+/* ==========================================================================
+   QUIET FRAMES — the two games that do not exist yet.
+
+   The old version drew these as full cards with full-size art plates, which
+   made two large grey slabs the biggest objects on the page and killed the
+   grid. They are now recessed berths: below the ground plane rather than above
+   it, half the height, no hover, no lift, and labelled in plain words. They
+   read as space kept open, which is what they are. They are never clickable,
+   because there is nothing to click.
+   ========================================================================= */
+
+.berths {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.berth {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-4);
+  border-radius: var(--radius);
+  background-color: var(--paper-sunk);
+  box-shadow: inset 0 1px 0 oklch(0 0 0 / 0.5), inset 0 0 0 1px var(--line);
+}
+.berth__mark {
+  display: block;
+  width: 92px;
+  height: 62px;
+  opacity: 0.5;
+  border-radius: var(--radius-sm);
+  background-color: oklch(0.09 0.018 264);
+}
+.berth__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  min-width: 0;
+}
+.berth__title {
+  font-size: 1rem;
   font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+}
+.berth__line {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  opacity: 0.86;
 }
 
 .badge {
@@ -304,28 +616,289 @@ a {
   align-items: center;
   gap: 0.4em;
   align-self: flex-start;
-  padding: 0.15em 0.6em;
-  border-radius: 999px;
+  padding: 0.2em 0.65em;
+  border-radius: var(--radius-pill);
   border: 1px solid currentColor;
   font-family: var(--font-data);
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 /* Status is carried by the word AND the outline shape, never by hue alone. */
 .badge--ready {
   color: var(--good);
+  background: var(--good-soft);
 }
 .badge--wip {
   color: var(--ink-soft);
   border-style: dashed;
 }
-.card--wip {
-  border-style: dashed;
-  background: var(--paper);
+
+/* ==========================================================================
+   THE HOUSE RULES — a specification strip, not five paragraphs.
+   Each row is a claim and its one qualifying clause. Anything longer than a
+   clause belongs on the parents page, where it is already written out.
+   ========================================================================= */
+
+.rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--line);
+  box-shadow: inset 0 1px 0 var(--edge-hi), var(--elev-1);
 }
-.card--wip .card__art {
-  opacity: 0.65;
+.rules > div {
+  display: flex;
+  flex: 1 1 205px;
+  flex-direction: column;
+  gap: 0.3em;
+  padding: var(--s-4);
+  background-color: var(--paper-raised);
+}
+.rules dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.94rem;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+  color: var(--ink);
+}
+.rules dd {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   NOTE PANEL — replaces `.panel { border-left: 4px solid var(--accent) }`.
+
+   A thick coloured bar down one edge of a card is the most recognisable tell
+   of generated UI. The same job — "this block is set apart and has a status" —
+   is done here by a tinted ground and a single lit dot in the eyebrow, which
+   is the language the rest of the page already speaks.
+   ========================================================================= */
+
+.panel {
+  border-radius: var(--radius);
+  background-color: var(--paper-raised);
+  background-image: linear-gradient(
+    180deg,
+    oklch(from var(--accent) l c h / 6%),
+    transparent 58%
+  );
+  box-shadow: inset 0 1px 0 var(--edge-hi), inset 0 0 0 1px var(--line),
+    var(--elev-1);
+  padding: var(--s-5);
+  margin: 0 0 var(--s-5);
+  max-width: var(--measure);
+}
+.panel > :last-child {
+  margin-bottom: 0;
+}
+.panel--wide {
+  max-width: none;
+  margin-top: var(--s-5);
+  margin-bottom: 0;
+}
+@media (min-width: 860px) {
+  .panel--wide {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--s-5);
+    align-items: start;
+    padding: var(--s-6);
+  }
+  .panel--wide .eyebrow {
+    margin: 0.3em 0 0;
+  }
+  .panel--wide > div:first-child {
+    position: relative;
+  }
+  .panel--wide p {
+    max-width: 58ch;
+  }
+}
+.panel h3 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+.panel .eyebrow {
+  margin-bottom: var(--s-3);
+}
+
+/* Disclosure. The long version of anything lives behind one of these, so the
+   page carries one line per idea and the detail is still one click away
+   rather than deleted. */
+/* The citation. A refusal is only as good as the specific thing it is
+   refusing on the strength of, so the case sits next to the sentence rather
+   than three clicks away. */
+.panel__cite {
+  margin: var(--s-3) 0 0;
+  font-family: var(--font-data);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  padding-left: 0.95rem;
+  border-left: 1px solid var(--line);
+}
+.panel__cite span {
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+
+.more {
+  margin: var(--s-3) 0 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--paper-sunk);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.more > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: var(--tap);
+  padding: 0 var(--s-4);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+  list-style: none;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.more > summary::-webkit-details-marker {
+  display: none;
+}
+.more > summary::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg) translate(-1px, -1px);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.more[open] > summary::before {
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+.more > summary:hover {
+  background: var(--paper-raised);
+}
+.more__body {
+  padding: 0 var(--s-4) var(--s-4);
+}
+.more__body > :last-child {
+  margin-bottom: 0;
+}
+.more__body p {
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+}
+
+/* --- The parents page ----------------------------------------------------
+   A long verification page in a 68ch column leaves half of a laptop screen
+   empty, which is the same "document in a window" failure the portal had. The
+   rail below carries the sections, keeps its place while you read, and gives
+   the tables the width they need. Prose still stops at a readable measure. */
+
+.doc {
+  display: block;
+}
+.doc__body {
+  max-width: none;
+}
+.doc__rail {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .doc {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+  .doc__rail {
+    display: block;
+    position: sticky;
+    top: var(--s-5);
+  }
+}
+.doc__rail ul {
+  list-style: none;
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  border-left: 1px solid var(--line);
+}
+.doc__rail li {
+  margin: 0;
+}
+.doc__rail a {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--s-3);
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.doc__rail a:hover {
+  color: var(--ink);
+  border-left-color: var(--accent);
+  background: var(--paper-raised);
+}
+
+/* The seven answers, before the seven paragraphs. */
+.glance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  list-style: none;
+  margin: var(--s-5) 0 var(--s-6);
+  padding: 0;
+}
+.glance li {
+  padding: 0.35em 0.85em;
+  border-radius: var(--radius-pill);
+  background-color: var(--paper-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-family: var(--font-data);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.text-input {
+  min-height: var(--tap);
+  font: inherit;
+  padding: 0 0.7em;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-sunk);
+  color: var(--ink);
+  width: 8em;
+}
+
+.dump {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-data);
+  font-size: 0.86rem;
+  margin: 0;
+  color: var(--ink-soft);
 }
 
 /* --- Prose blocks (the parents page) ------------------------------------- */
@@ -334,20 +907,27 @@ a {
   max-width: var(--measure);
 }
 .prose h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: var(--s-7) 0 var(--s-3);
 }
 .prose h3 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   margin: var(--s-5) 0 var(--s-2);
 }
 .prose ul,
 .prose ol {
   margin: 0 0 var(--s-4);
-  padding-left: 1.3em;
+  padding-left: 1.25em;
 }
 .prose li {
   margin-bottom: var(--s-2);
+  color: var(--ink-soft);
+}
+.prose li strong {
+  color: var(--ink);
+}
+.prose p {
+  color: var(--ink-soft);
 }
 .prose code {
   font-family: var(--font-data);
@@ -356,45 +936,42 @@ a {
   border: 1px solid var(--line);
   border-radius: 5px;
   padding: 0.1em 0.35em;
-}
-.lede {
-  font-size: 1.15rem;
   color: var(--ink);
 }
-
-.panel {
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--radius-sm);
-  background: var(--paper-raised);
-  padding: var(--s-4) var(--s-5);
-  margin: 0 0 var(--s-5);
-  max-width: var(--measure);
-}
-.panel > :last-child {
-  margin-bottom: 0;
-}
-.panel h3 {
-  margin-top: 0;
+.lede {
+  font-size: 1.12rem;
+  color: var(--ink);
+  max-width: 60ch;
 }
 
 table.facts {
   width: 100%;
-  max-width: var(--measure);
-  border-collapse: collapse;
+  max-width: 54rem;
+  border-collapse: separate;
+  border-spacing: 0;
   margin: 0 0 var(--s-5);
-  font-size: 0.95rem;
+  font-size: 0.94rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--paper-raised);
+  box-shadow: inset 0 1px 0 var(--edge-hi), inset 0 0 0 1px var(--line),
+    var(--elev-1);
 }
 table.facts th,
 table.facts td {
   text-align: left;
   vertical-align: top;
-  padding: var(--s-3) var(--s-3);
+  padding: var(--s-3) var(--s-4);
   border-bottom: 1px solid var(--line);
+}
+table.facts tr:last-child th,
+table.facts tr:last-child td {
+  border-bottom: 0;
 }
 table.facts th {
   font-family: var(--font-display);
-  width: 34%;
+  font-weight: 600;
+  width: 42%;
   color: var(--ink);
 }
 table.facts td {
@@ -404,11 +981,11 @@ table.facts td {
 /* --- Footer + attribution ------------------------------------------------ */
 
 .site-footer {
-  margin-top: var(--s-8);
+  margin-top: var(--s-7);
   padding-top: var(--s-5);
   border-top: 1px solid var(--line);
   color: var(--ink-soft);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 .site-footer p {
   max-width: var(--measure);
@@ -417,12 +994,13 @@ table.facts td {
   display: flex;
   gap: var(--s-4);
   flex-wrap: wrap;
-  margin-bottom: var(--s-4);
+  margin-bottom: var(--s-3);
 }
 .footer-links a {
   min-height: var(--tap);
   display: inline-flex;
   align-items: center;
+  color: var(--ink);
 }
 
 /* attribution-kit v1 — the maker's mark. Inherits `color`; the mark draws in
@@ -472,6 +1050,9 @@ body.playing {
   overscroll-behavior: none;
   background: var(--stage-ground, oklch(0.14 0.03 250));
 }
+body.playing::before {
+  display: none;
+}
 
 .stage {
   position: fixed;
@@ -496,9 +1077,11 @@ body.playing {
   border-color: oklch(1 0 0 / 0.28);
   color: inherit;
   padding-inline: var(--s-3);
+  box-shadow: none;
 }
 .stage__bar .btn:hover {
   background: oklch(1 0 0 / 0.2);
+  box-shadow: none;
 }
 .stage__title {
   font-family: var(--font-display);
@@ -528,7 +1111,7 @@ body.playing {
   bottom: max(env(safe-area-inset-bottom, 0px), 14px);
   width: min(360px, 72vw);
   min-height: 76px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 2px solid oklch(1 0 0 / 0.42);
   background: oklch(1 0 0 / 0.08);
   color: oklch(0.98 0.01 250);
@@ -568,8 +1151,13 @@ body.playing {
   display: grid;
   place-items: center;
   padding: var(--s-4);
-  background: oklch(0.1 0.02 250 / 0.72);
-  backdrop-filter: blur(3px);
+  /* A scrim, not a curtain. The blur that used to sit here was removed on
+     cost grounds (a backdrop-filter over a live canvas is the most expensive
+     thing on the page), and once it was gone the scrim had been darkened far
+     enough to hide the harbour entirely. The harbour should be visible behind
+     the menu: the game is already running back there. Text contrast is
+     unaffected either way, because the sheet itself is opaque. */
+  background: oklch(0.07 0.02 258 / 0.66);
   overflow-y: auto;
 }
 .overlay[hidden] {
@@ -578,11 +1166,11 @@ body.playing {
 
 .sheet {
   width: min(620px, 100%);
-  background: var(--paper-raised);
+  background-color: var(--paper-raised);
   color: var(--ink);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-lift);
+  box-shadow: inset 0 1px 0 var(--edge-hi), inset 0 0 0 1px var(--line),
+    var(--elev-3);
   padding: var(--s-5);
   margin: auto;
 }
@@ -623,10 +1211,14 @@ body.playing {
   font-family: inherit;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 .choice:hover {
   border-color: var(--accent);
-  background: var(--paper-sunk);
+  background: var(--paper-high);
+  transform: translateY(-1px);
 }
 .choice[aria-pressed="true"] {
   border-color: var(--accent);
@@ -700,9 +1292,9 @@ input[type="range"] {
   gap: var(--s-3);
   align-items: center;
   padding: var(--s-3);
-  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: var(--paper);
+  background-color: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .tally svg {
   width: 30px;
@@ -726,16 +1318,25 @@ input[type="range"] {
   gap: 5px;
   margin: var(--s-4) 0;
   padding: var(--s-3);
-  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: var(--paper-sunk);
+  background-color: var(--paper-sunk);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .quay-strip svg {
   width: 22px;
   height: 26px;
 }
 
+/* ==========================================================================
+   MOTION OFF. Everything above is decoration, so all of it goes away when the
+   visitor has asked for less motion — including the cross-document transition
+   into the game.
+   ========================================================================= */
+
 @media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
   *,
   *::before,
   *::after {
@@ -743,5 +1344,11 @@ input[type="range"] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .lead:hover,
+  .lead:focus-within,
+  .btn--primary:hover,
+  .choice:hover {
+    transform: none;
   }
 }

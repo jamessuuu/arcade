@@ -1,56 +1,96 @@
 /* ============================================================================
    arcade — design tokens.
 
-   Legibility leads. This portal is read by seven-year-olds and by people with
-   presbyopia, so nothing here is small, thin, or low-contrast, and nothing
-   depends on hue to carry meaning.
+   THE ONE DECISION THIS FILE MAKES: the portal is the same night as the game.
 
-   Rules this file enforces:
-   - OKLCH throughout, so lightness is perceptual and contrast is predictable.
-   - Every text pair below clears 4.5:1. Tokens that do NOT clear it are named
-     `-faint` and are only ever used for hairlines and non-informational rules.
-   - `--tap` is the minimum interactive box. 44px. It is not negotiable and the
-     a11y checker measures it against the rendered DOM.
+   The first version of this file was cream. It was written before the shared
+   design spine moved to a dusk product surface, and it faithfully implemented
+   the older austerity doctrine: paper ground, hairline borders, a serif
+   reading face, no depth, no glow. Applied to a portal whose only finished
+   product is a lit night harbour, that produced a document wrapped around a
+   game — a visitor met an essay and never saw what the thing actually was.
+
+   So every ground here is taken from the game's own sky, and the accent is the
+   game's own lamp. `src/games/harbor-watch/art.js` is the source: skyTop
+   0x060a16, skyMid 0x0f1b33, amber 0xffc25c. Those hex values are converted to
+   OKLCH below rather than pasted, because lightness has to be perceptual for
+   the contrast floor to be predictable.
+
+   Rules this file still enforces, unchanged:
+   - OKLCH throughout. Every text pair below clears 4.5:1 against the RENDERED
+     colour, verified by tests/a11y-check.mjs, not by this comment.
+   - Tokens that do NOT clear it are named `-faint` and may only be used for
+     hairlines and non-informational rules. Never for text.
+   - `--tap` is the minimum interactive box, and it is measured against the
+     rendered DOM rather than asserted here. See the note beside the token.
    - No @font-face, no external font origin, no network request of any kind.
-     System stacks only. That is obligation 2 in the program, and it is why the
-     network capture comes back empty.
+     System stacks only. That is why the network capture comes back empty.
+
+   Structure tokens (--radius-structure, --elev-1..3, --ease-out, --dur-*)
+   follow section 12 of the shared spine at
+   ~/.claude/harness-dist/substrate/substrate.css. Names match so the two files
+   can be read against each other.
    ========================================================================= */
 
 :root {
-  color-scheme: light dark;
+  /* One lighting. The portal does not follow the operating system into
+     daylight, because there is no daylight version of this product: the game
+     is a night watch, and a cream wrapper around it was the defect. */
+  color-scheme: dark;
 
-  /* --- Faces. `--font-prose` is the reading face; body copy uses it. ------ */
-  --font-prose: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
-    "Times New Roman", serif;
+  /* --- Faces. One sans voice, one mono for instrument readouts. ----------
+     The serif reading face is gone on purpose. It was the loudest single
+     signal that this was a document rather than a product. */
+  --font-prose: "Segoe UI Variable Text", ui-sans-serif, -apple-system,
+    "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-display: "Segoe UI Variable Display", ui-sans-serif, -apple-system,
     "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-data: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo,
     "Liberation Mono", monospace;
 
-  /* --- Ground and ink (light). ------------------------------------------- */
-  --paper: oklch(0.985 0.006 85);
-  --paper-raised: oklch(1 0 0);
-  --paper-sunk: oklch(0.955 0.008 82);
-  --ink: oklch(0.24 0.012 70);           /* 15.4:1 on --paper */
-  --ink-soft: oklch(0.44 0.015 70);      /*  5.2:1 on --paper */
-  --ink-faint: oklch(0.62 0.012 70);     /* decoration only, never text */
-  --line: oklch(0.87 0.008 80);          /* hairline */
-  --line-strong: oklch(0.66 0.012 80);
+  /* --- Ground and ink. The elevation ladder is a value step first; the
+         shadow only confirms what the value already said. ----------------- */
+  --paper: oklch(0.145 0.022 262);        /* the night itself — page ground  */
+  --paper-sunk: oklch(0.112 0.020 264);   /* recessed: empty berths, wells   */
+  --paper-raised: oklch(0.205 0.022 260); /* a panel standing off the ground */
+  --paper-high: oklch(0.248 0.021 258);   /* the one thing that floats       */
 
-  --accent: oklch(0.45 0.105 222);       /*  5.0:1 on --paper — harbour blue */
-  --accent-soft: oklch(0.93 0.03 222);
-  --accent-ink: oklch(0.99 0.005 222);
+  --ink: oklch(0.965 0.006 250);          /* 14.4:1 on --paper               */
+  --ink-soft: oklch(0.805 0.012 250);     /*  7.4:1 on --paper-raised        */
+  --ink-faint: oklch(0.62 0.014 250);     /* decoration only, never text     */
+  --line: oklch(0.305 0.016 258);         /* hairline                        */
+  --line-strong: oklch(0.465 0.018 258);
 
-  --warn: oklch(0.46 0.14 32);
-  --warn-soft: oklch(0.945 0.035 40);
-  --good: oklch(0.44 0.10 155);
-  --good-soft: oklch(0.94 0.035 155);
+  /* Edge highlight. On a dark surface light catches the TOP edge; the cream
+     version had it on the bottom, which is why nothing looked lit. */
+  --edge-hi: oklch(0.40 0.016 258);
 
-  --focus: oklch(0.45 0.19 262);
-  --aj-attribution-signal: #b45309;
+  /* --- The lamp. This is the game's signal colour, and it is the only
+         saturated thing allowed to lead. -------------------------------- */
+  --accent: oklch(0.845 0.132 76);        /* 0xffc25c — the signal lamp      */
+  --accent-bright: oklch(0.955 0.048 82); /* 0xfff3d6 — the lit lens         */
+  --accent-deep: oklch(0.735 0.165 55);   /* 0xff9a3c — the far shore        */
+  --accent-soft: oklch(0.285 0.055 72);   /* a wash, not a border            */
+  --accent-ink: oklch(0.175 0.030 70);    /* ink ON the lamp                 */
+
+  --good: oklch(0.805 0.118 158);
+  --good-soft: oklch(0.265 0.045 158);
+  --warn: oklch(0.815 0.130 62);
+  --warn-soft: oklch(0.275 0.050 62);
+
+  --focus: oklch(0.865 0.135 215);
+
+  --shadow-ink: oklch(0.05 0.03 264);
+  --signal-glow: oklch(0.86 0.19 76);
+  --aj-attribution-signal: #ffc25c;
 
   /* --- Measure and rhythm. ----------------------------------------------- */
-  --tap: 44px;                            /* WCAG 2.5.8 target minimum */
+  /* WCAG 2.5.8's floor is 44px. This sits 2px above it on purpose: laying a
+     control out at exactly 44 puts it on the boundary, and a starved renderer
+     reported 43.9 for a `min-height: 44px` box during a loaded test run — a
+     measurement artefact, but one that is indistinguishable from a real
+     regression. Two pixels of headroom is free and strictly more conformant. */
+  --tap: 46px;
   --s-1: 0.25rem;
   --s-2: 0.5rem;
   --s-3: 0.75rem;
@@ -59,86 +99,49 @@
   --s-6: 2rem;
   --s-7: 3rem;
   --s-8: 4.5rem;
-  --radius: 14px;
-  --radius-sm: 9px;
-  --measure: 66ch;
 
-  --shadow-lift: 0 1px 2px oklch(0.24 0.012 70 / 0.06),
-    0 6px 18px oklch(0.24 0.012 70 / 0.07);
+  /* Real corners. 0px and 14px were both wrong for different reasons; 10px is
+     the spine's structure radius and it is what shipped products use. */
+  --radius: 10px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+  --measure: 68ch;
+
+  /* One easing curve, two durations, for the whole site. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-slow: 420ms;
+
+  /* Elevation as a ladder. Chroma-bearing, never neutral black: a pure black
+     shadow on a blue-black ground reads as a hole rather than as depth. */
+  --elev-1: 0 1px 2px -1px oklch(from var(--shadow-ink) l c h / 45%),
+    0 4px 12px -4px oklch(from var(--shadow-ink) l c h / 40%);
+  --elev-2: 0 2px 4px -2px oklch(from var(--shadow-ink) l c h / 50%),
+    0 12px 32px -8px oklch(from var(--shadow-ink) l c h / 48%);
+  --elev-3: 0 4px 8px -4px oklch(from var(--shadow-ink) l c h / 55%),
+    0 24px 64px -12px oklch(from var(--shadow-ink) l c h / 55%);
+  --shadow-lift: var(--elev-1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: oklch(0.185 0.012 258);
-    --paper-raised: oklch(0.235 0.014 258);
-    --paper-sunk: oklch(0.145 0.012 258);
-    --ink: oklch(0.955 0.006 85);         /* 15.9:1 on --paper */
-    --ink-soft: oklch(0.79 0.011 85);     /*  7.8:1 on --paper */
-    --ink-faint: oklch(0.55 0.012 85);
-    --line: oklch(0.33 0.014 258);
-    --line-strong: oklch(0.50 0.016 258);
-
-    --accent: oklch(0.80 0.095 218);      /*  8.9:1 on --paper */
-    --accent-soft: oklch(0.30 0.05 218);
-    --accent-ink: oklch(0.16 0.02 218);
-
-    --warn: oklch(0.78 0.13 42);
-    --warn-soft: oklch(0.30 0.06 42);
-    --good: oklch(0.80 0.11 158);
-    --good-soft: oklch(0.28 0.05 158);
-
-    --focus: oklch(0.83 0.15 250);
-    --aj-attribution-signal: #f59e0b;
-
-    --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.4), 0 6px 18px oklch(0 0 0 / 0.35);
-  }
-}
-
-:root[data-theme="dark"] {
-  --paper: oklch(0.185 0.012 258);
-  --paper-raised: oklch(0.235 0.014 258);
-  --paper-sunk: oklch(0.145 0.012 258);
-  --ink: oklch(0.955 0.006 85);
-  --ink-soft: oklch(0.79 0.011 85);
-  --ink-faint: oklch(0.55 0.012 85);
-  --line: oklch(0.33 0.014 258);
-  --line-strong: oklch(0.50 0.016 258);
-  --accent: oklch(0.80 0.095 218);
-  --accent-soft: oklch(0.30 0.05 218);
-  --accent-ink: oklch(0.16 0.02 218);
-  --warn: oklch(0.78 0.13 42);
-  --warn-soft: oklch(0.30 0.06 42);
-  --good: oklch(0.80 0.11 158);
-  --good-soft: oklch(0.28 0.05 158);
-  --focus: oklch(0.83 0.15 250);
-  --aj-attribution-signal: #f59e0b;
-  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.4), 0 6px 18px oklch(0 0 0 / 0.35);
-}
-
-/* High-contrast setting. A floor lift, not a theme: it raises every text pair
-   toward maximum and thickens every hairline, without changing the layout. */
+/* High contrast. A floor lift, not a second theme: it stays night, and pushes
+   every pair toward the maximum while thickening every hairline. Switching to
+   a white page here would have thrown a player out of the game's own light. */
 :root[data-contrast="high"] {
-  --ink: oklch(0.12 0 0);
-  --ink-soft: oklch(0.22 0 0);
-  --ink-faint: oklch(0.4 0 0);
-  --line: oklch(0.35 0 0);
-  --line-strong: oklch(0.15 0 0);
-  --paper: oklch(1 0 0);
-  --paper-raised: oklch(1 0 0);
-  --paper-sunk: oklch(0.96 0 0);
-  --accent: oklch(0.32 0.13 250);
-  --accent-soft: oklch(0.96 0.02 250);
-}
-
-:root[data-contrast="high"][data-theme="dark"],
-:root[data-contrast="high"][data-theme="system"]:is(.dark-preferred) {
+  --paper: oklch(0.055 0 0);
+  --paper-sunk: oklch(0.03 0 0);
+  --paper-raised: oklch(0.125 0 0);
+  --paper-high: oklch(0.165 0 0);
   --ink: oklch(1 0 0);
-  --ink-soft: oklch(0.93 0 0);
-  --paper: oklch(0.08 0 0);
-  --paper-raised: oklch(0.13 0 0);
-  --paper-sunk: oklch(0.04 0 0);
-  --line: oklch(0.62 0 0);
-  --line-strong: oklch(0.85 0 0);
-  --accent: oklch(0.88 0.11 218);
-  --accent-soft: oklch(0.22 0.05 218);
+  --ink-soft: oklch(0.935 0 0);
+  --ink-faint: oklch(0.72 0 0);
+  --line: oklch(0.60 0 0);
+  --line-strong: oklch(0.86 0 0);
+  --edge-hi: oklch(0.70 0 0);
+  --accent: oklch(0.92 0.135 82);
+  --accent-bright: oklch(0.99 0.02 85);
+  --accent-soft: oklch(0.20 0.05 82);
+  --accent-ink: oklch(0.06 0 0);
+  --good: oklch(0.92 0.12 158);
+  --warn: oklch(0.92 0.13 70);
+  --focus: oklch(0.97 0.09 215);
 }

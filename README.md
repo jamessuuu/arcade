@@ -14,7 +14,7 @@ on every run and writes to [`docs/network-capture.json`](docs/network-capture.js
 
 | | |
 |---|---|
-| **Portal shell** | Home page with the game grid, per-game cards, and a parent-verifiable page. Done. |
+| **Portal shell** | Home page led by the finished game, two marked-empty berths, and a parent-verifiable page. Rebuilt 2026-09-07 — see *The shell is the same night as the game*. Done. |
 | **Slot 1 — Harbor Watch** | One verb, no words on the canvas, a run ends in about three minutes. Playable start to finish. |
 | **Slot 2 — planning game** | A real placeholder card marked *in development*. Not playable, not pretending to be. |
 | **Slot 3 — restraint game** | Same. |
@@ -121,6 +121,56 @@ and the fairness checks run in plain Node.
 
 ---
 
+## The shell is the same night as the game
+
+The portal was first built as a cream engineering-paper document: flat cards
+with hairline borders, a serif reading face, three paragraphs per card, and two
+large grey plates where the unbuilt games were. It was a faithful
+implementation of the design doctrine in force at the time. It was also wrong,
+in a way that is worth naming precisely rather than calling a taste
+disagreement.
+
+**The wrapper contradicted the product.** Harbor Watch is a lit night harbour —
+a signal lamp, a moon, light cones on black water. A visitor met a document
+first, read three paragraphs about attention, and formed a judgement about the
+whole thing before ever seeing what it actually was. The two grey plates made
+it worse: they were the largest objects on the page, and what they communicated
+was *unfinished*.
+
+What changed, and why each one:
+
+| Was | Is | Because |
+|---|---|---|
+| Cream ground, follows the OS into light mode | One lighting, dusk, taken from the game's own sky (`art.js`: `0x060a16`, `0x0f1b33`, amber `0xffc25c`) | There is no daylight version of this product. A theme switch on a night harbour is a control with nowhere to go. |
+| Three paragraphs per card | One line each, detail behind a disclosure | A portal's job is to get you into the game, not to describe it. |
+| A static thumbnail of the game | The harbour itself, animated — the lamp breathing, the beam landing on the water, a ship inside the light, glints drifting | Leading with the thing running is the only honest version of "the game is the best part". |
+| Two grey plates the size of the finished game | Two recessed berths at a third the weight, still saying plainly that they are not playable and are not links | Space kept open should look like space kept open. |
+| `.panel { border-left: 4px solid var(--accent) }` | A tinted ground and one lit dot in the eyebrow | A thick coloured bar down one edge of a card is the most recognisable tell of generated UI. |
+| Five house rules as five paragraphs | A five-cell specification strip | Every cut clause is written out in full on the parents page, which is where a claim belongs. |
+| A **Theme** control offering Follow-my-device / Light / Dark | Removed | It was already half-dead — `[data-theme="light"]` existed only as a negation inside the `prefers-color-scheme` block, so on a light-scheme machine the Light button did nothing. On a site whose entire pitch is that its claims can be checked, a switch that reports a state it does not have is a claim that fails the check. |
+
+Structure follows section 12 of the shared design spine: a 10px structure
+radius, a three-step elevation ladder, one easing curve and two durations, and
+one ambient wash tinted by the project's own signal hue.
+
+Three effects are **banned in this file by name**, with the numbers that
+banned them — measured on another project the same week, not guessed:
+
+| Effect | Cost |
+|---|---|
+| Gaussian blur on a shadow layer | 58 → 24 fps |
+| `mix-blend-mode: overlay` | 60 → 47.8 fps |
+| `backdrop-filter` on small chips | 60 → 44.7 fps |
+
+So every glow here is a paint-once radial gradient and every animation moves
+only `transform` and `opacity`. `node tests/portal-cost.mjs` measures the
+result against the same page with motion off: **0 ms** difference in p50 frame
+time, 59.9 fps either way, no dropped frames. The game's own budget is
+unchanged at **p50 5.0 ms / p95 5.1 ms** — the `backdrop-filter` that used to
+sit on the pause overlay is gone, which if anything gives it back a little.
+
+---
+
 ## Measured numbers
 
 Everything below was measured on this machine on 2026-09-07. Nothing is
@@ -130,13 +180,18 @@ estimated. Re-run any of it yourself with the commands shown.
 
 | Page | Transferred | gzip equivalent | Requests |
 |---|---|---|---|
-| Portal home | 27.2 kB | 7.7 kB | 2 |
-| For parents | 33.6 kB | 11.7 kB | 4 |
-| Harbor Watch | **503.4 kB** | **151.0 kB** | 12 |
+| Portal home | 41.2 kB | 10.6 kB | 2 |
+| For parents | 41.9 kB | 13.3 kB | 4 |
+| Harbor Watch | **510.8 kB** | **152.5 kB** | 12 |
 
-Whole built site: 594.2 kB across 17 files (179.6 kB gzipped). The programme's
-first-load budget is 2 MB; the game page uses 24% of it. PixiJS is the bulk of
+Whole built site: 608.9 kB across 17 files (182.6 kB gzipped). The programme's
+first-load budget is 2 MB; the game page uses 25% of it. PixiJS is the bulk of
 it and is code-split, so the two content pages never download the renderer.
+
+The portal home grew by 14 kB uncompressed (2.9 kB gzipped) when the shell was
+rebuilt — that is the animated harbour scene, which is inline SVG. It is still
+two requests, because inline SVG is not a request, and there is still no image
+file, no font file and no third-party anything in this repository.
 
 ### Frame time — `npm run verify:gpu`
 
@@ -214,10 +269,11 @@ npm run verify:gpu          # a real-time run on the real GPU
 | `verify:patterns` | The enumerated dark-pattern list, checked at runtime: notification permission never requested, no service worker, no cookie ever written, nothing streak-shaped in storage, no link out of a game, no autoplay. |
 | `verify:network` | The receipt above. |
 | `verify:claims` | A denylist over every shipped string. |
-| `verify:a11y` | 44px targets, contrast against *rendered* colours in light and dark and high-contrast, one h1, skip links, accessible names, keyboard traversal. |
+| `verify:a11y` | Target sizes, contrast against *rendered* colours under both `prefers-color-scheme` values and under the high-contrast setting, one h1, skip links, accessible names, keyboard traversal. |
+| `tests/portal-cost.mjs` | What the portal's motion costs, measured against the same page with motion switched off. The animated hero moves `transform` and `opacity` only; the measured difference in p50 frame time is 0 ms. |
 | `tests/spawn-floor.mjs` | 3000 generated shifts; no decision window under the floor, ever. |
 | `verify:budget` | The payload table above. |
-| `verify:bytes` | Sweeps every text file for stray control bytes. This exists because a regex written through a shell heredoc had its `` collapsed into a literal BACKSPACE byte, so the pattern matched nothing while its check reported a clean pass. A dead checker's silence is indistinguishable from a real pass, which is why several of these gates plant a violation in themselves first. |
+| `verify:bytes` | Sweeps every text file for stray control bytes. This exists because a regex written through a shell heredoc had its `\b` collapsed into a literal BACKSPACE byte, so the pattern matched nothing while its check reported a clean pass. A dead checker's silence is indistinguishable from a real pass, which is why several of these gates plant a violation in themselves first. |
 
 Four of these checkers **plant a violation in themselves first and fail if they
 cannot find it**, because a checker that has never caught anything is

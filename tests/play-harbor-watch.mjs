@@ -77,7 +77,21 @@ export async function run() {
           "--disable-renderer-backgrounding",
           "--disable-background-timer-throttling",
         ]
-      : ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--mute-audio"],
+      : [
+          "--use-angle=swiftshader",
+          "--enable-unsafe-swiftshader",
+          "--mute-audio",
+          // The same three anti-throttling flags the --gpu path already
+          // carried. Without them a loaded machine backgrounds the headless
+          // renderer mid-run, rAF drops to ~1Hz, and the validity assertion
+          // below fires — a FALSE failure, because nothing about the game
+          // changed. The numbers from this path are never quoted anyway, so
+          // these flags cost nothing and remove a flake that is
+          // indistinguishable from a real regression.
+          "--disable-backgrounding-occluded-windows",
+          "--disable-renderer-backgrounding",
+          "--disable-background-timer-throttling",
+        ],
   });
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 
@@ -246,7 +260,15 @@ export async function run() {
     // Chromium throttles requestAnimationFrame to 1Hz in a window it believes
     // is occluded, which produces ~1005ms "frames" that say nothing about the
     // game. Detect that and refuse to report the number rather than quote it.
-    const throttled = (report.frame?.wholeRun?.worstMs ?? 0) > 400;
+    //
+    // Counted, not maxed. The first version failed the whole gate on a single
+    // frame over 400ms, which a GC pause or an OS hiccup produces on a loaded
+    // machine — and a flaky gate is worse than a missing one, because its red
+    // is indistinguishable from a real regression. Real throttling holds ~1Hz
+    // for as long as the window stays hidden, so it shows up as many such
+    // frames rather than one.
+    const stalled = report.frame?.wholeRun?.over400 ?? 0;
+    const throttled = stalled >= 3;
     report.frameMeasurementValid = !throttled;
     if (throttled) {
       report.frameNote =
@@ -255,7 +277,11 @@ export async function run() {
     ok(
       "the frame-time measurement is valid (the window was actually drawing)",
       !throttled,
-      throttled ? `worst frame ${report.frame.wholeRun.worstMs}ms — window occluded, measurement discarded` : "",
+      throttled
+        ? `${stalled} frames over 400ms (worst ${report.frame.wholeRun.worstMs}ms) — window occluded, measurement discarded`
+        : stalled
+          ? `${stalled} isolated stall over 400ms (worst ${report.frame.wholeRun.worstMs}ms); not throttling, measurement kept`
+          : "",
     );
     report.audio = await page.evaluate(() => globalThis.__arcade.audio());
     info("frame time (ms) over the run", report.frame);

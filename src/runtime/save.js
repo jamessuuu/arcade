@@ -33,7 +33,6 @@ function defaults() {
   return {
     version: SAVE_VERSION,
     settings: {
-      theme: "system",
       contrast: "normal",
       motion: "auto", // auto | reduced | full
       shake: 0.6, // 0..1, 0 is off
