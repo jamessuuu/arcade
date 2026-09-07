@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>For parents — The Quiet Arcade</title>
+    <meta
+      name="description"
+      content="What is stored, what leaves your device (nothing), what these games claim and do not claim, and a button that erases everything."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23101d38'/%3E%3Cpath d='M16 5l3 6h-6z' fill='%23ffc25c'/%3E%3Crect x='13' y='11' width='6' height='9' fill='%23fff3d6'/%3E%3Crect x='7' y='21' width='18' height='3' rx='1' fill='%23ffc25c'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/shell.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the content</a>
+    <div class="page">
+      <header class="site-header">
+        <div>
+          <a class="brandmark" href="./index.html" aria-label="The Quiet Arcade, home">
+            <svg viewBox="0 0 48 48" width="34" height="34" aria-hidden="true">
+              <rect width="48" height="48" rx="10" fill="#101d38" />
+              <path d="M24 7l4.5 9h-9z" fill="#ffc25c" />
+              <rect x="19.5" y="16" width="9" height="13" fill="#fff3d6" />
+              <rect x="9" y="31" width="30" height="4" rx="1.6" fill="#ffc25c" />
+            </svg>
+            <span class="wordmark">The Quiet Arcade</span>
+          </a>
+        </div>
+        <nav class="header-nav" aria-label="Site">
+          <a class="btn" href="./index.html">Back to the games</a>
+        </nav>
+      </header>
+
+      <main id="main" class="prose">
+        <h1>For parents</h1>
+        <p class="lede">
+          This page exists so you can check the claims on this site rather than
+          trust them. Every statement below can be verified from your own
+          browser in about a minute, and the last section tells you how.
+        </p>
+
+        <h2>The short version</h2>
+        <table class="facts">
+          <tbody>
+            <tr>
+              <th scope="row">Does it collect anything about my child?</th>
+              <td>No. There is no account, no sign-in, no name field, no email, no analytics, no advertising, and no cookie.</td>
+            </tr>
+            <tr>
+              <th scope="row">Does anything leave the device?</th>
+              <td>No. Once the page has loaded, the games make no network requests at all. There is no server to send anything to.</td>
+            </tr>
+            <tr>
+              <th scope="row">What is stored, then?</th>
+              <td>Settings (volume, motion, contrast) and the best run for each game, in this browser's local storage. It is shown in full further down this page.</td>
+            </tr>
+            <tr>
+              <th scope="row">Are there ads?</th>
+              <td>No, of any kind, including our own.</td>
+            </tr>
+            <tr>
+              <th scope="row">Can my child spend money?</th>
+              <td>No. There is no shop, no currency, no unlock that costs anything, and no payment code anywhere in the site.</td>
+            </tr>
+            <tr>
+              <th scope="row">Will it nag them to come back?</th>
+              <td>No. There is no streak, no daily challenge, no countdown, and it never asks for permission to send a notification.</td>
+            </tr>
+            <tr>
+              <th scope="row">Does a session end?</th>
+              <td>Yes, always. Each run has a fixed end, and when it ends the game stops and says so. It never starts the next one by itself.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>What we claim, and what we refuse to claim</h2>
+
+        <!-- claims-negation:start — the panel below is the DISCLAIMER. It names
+             each forbidden claim in order to refuse it, which is the one place
+             those phrases are allowed to appear. tests/claims-check.mjs strips
+             regions between these markers and then prints what it stripped, so an
+             exemption can be read and challenged rather than quietly trusted. -->
+        <div class="panel">
+          <p>
+            <strong>What is true:</strong> these games are designed around
+            sustained attention, delayed reward and deliberate thinking. Each
+            one asks for one kind of attention and is built so the difficulty
+            comes from discriminating carefully rather than from reacting fast.
+            That is a description of how they were made, and you can check it by
+            playing one.
+          </p>
+          <p>
+            <strong>What we do not say:</strong> we do not say these games
+            improve focus, increase attention span, train the brain, help with
+            ADHD or any other condition, improve school or work performance, or
+            produce any benefit that lasts once the game is closed. We have no
+            evidence for any of that, so we make no such claim, and if you ever
+            see this site say otherwise, that is a mistake and it should be
+            reported as one.
+          </p>
+          <p class="field__hint">
+            This distinction is not lawyerly caution for its own sake. In
+            January 2016 the US Federal Trade Commission settled with the maker
+            of a well-known brain-training product over exactly these claims;
+            the settlement required competent and reliable scientific evidence
+            before any future claim about real-world benefit. We have none, so
+            we make none.
+          </p>
+        </div>
+        <!-- claims-negation:end -->
+
+        <h2>How long is a session?</h2>
+        <p>
+          These lengths are read directly from the game's own schedule at the
+          moment this page loads, so they cannot drift away from the build:
+        </p>
+        <table class="facts">
+          <caption class="visually-hidden">Session lengths by game and mode</caption>
+          <tbody id="sessionTable">
+            <tr><td colspan="2">Reading the game schedule&hellip;</td></tr>
+          </tbody>
+        </table>
+        <p class="field__hint">
+          These are the designed lengths, computed from the build. They are
+          <strong>not</strong> measured from watching real players, because no
+          playtest sessions have been run yet. When they have been, this page
+          will carry the measured figures and say who measured them.
+        </p>
+
+        <h2>Exactly what is on this device right now</h2>
+        <p>
+          This is not a description of what we store. It is a live read of your
+          own browser's local storage for this site, printed as it is:
+        </p>
+        <div class="panel">
+          <pre id="storageDump" style="white-space:pre-wrap;word-break:break-word;font-family:var(--font-data);font-size:.86rem;margin:0">Reading…</pre>
+        </div>
+
+        <h3>Erase everything</h3>
+        <p>
+          This removes every value the site has stored in this browser,
+          including any unreadable leftover copy. It takes effect immediately
+          and there is nothing else anywhere to delete.
+        </p>
+        <div class="panel">
+          <div id="gate">
+            <p id="gateQuestion">
+              <label class="field__label" for="gateAnswer">
+                A quick check that a grown-up is doing this. What is
+                <strong><span id="gateA">7</span> &times; <span id="gateB">8</span></strong>?
+              </label>
+            </p>
+            <p>
+              <input
+                type="number"
+                id="gateAnswer"
+                inputmode="numeric"
+                style="min-height:var(--tap);font:inherit;padding:0 .6em;border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--paper);color:var(--ink);width:8em"
+              />
+              <button type="button" class="btn" id="gateSubmit">Unlock</button>
+            </p>
+            <p class="field__hint" id="gateMsg" role="status"></p>
+          </div>
+          <div id="eraseArea" hidden>
+            <button type="button" class="btn btn--big" id="eraseBtn">
+              Erase everything stored on this device
+            </button>
+            <p class="field__hint" id="eraseMsg" role="status"></p>
+          </div>
+        </div>
+
+        <h2>How to check all of this yourself</h2>
+        <ol>
+          <li>
+            Open <a href="./harbor-watch.html">Harbor Watch</a>, then open your
+            browser's developer tools and select the Network tab.
+          </li>
+          <li>
+            Clear the list, then play a whole run from start to finish.
+          </li>
+          <li>
+            The list stays empty. Every file the game needs was loaded before
+            the run began, and nothing is requested during play or after it.
+          </li>
+          <li>
+            In the same developer tools, look under Application at Cookies: the
+            list is empty, because this site sets none.
+          </li>
+        </ol>
+        <p>
+          The project also records this automatically. A network capture taken
+          during a full scripted run is committed in the repository at
+          <code>docs/network-capture.json</code>, alongside the script that
+          produced it, so the check can be repeated rather than believed.
+        </p>
+
+        <h2>What is deliberately missing</h2>
+        <p>
+          Some of these are real costs, and we would rather name them than let
+          you discover them:
+        </p>
+        <ul>
+          <li>
+            <strong>No progress across devices.</strong> Because there is no
+            account, a run on the tablet is invisible on the laptop.
+          </li>
+          <li>
+            <strong>No leaderboards and no sharing.</strong> There is nowhere to
+            compare a child against strangers, by design.
+          </li>
+          <li>
+            <strong>We cannot tell whether any of this works.</strong> Refusing
+            analytics means we have no idea which game holds attention and which
+            one is dull. We accept that.
+          </li>
+          <li>
+            <strong>Harbor Watch needs sight.</strong> The whole game is telling
+            two shapes apart, so it cannot be played without vision. It can be
+            played with one hand, with one key, with no sound, with no colour
+            vision, and with every animation switched off.
+          </li>
+        </ul>
+
+        <h2>Who made this</h2>
+        <p>
+          One person, with software agents doing the implementation under
+          direction. The gameplay code was written by agents; the feel of the
+          game — how heavy the barrier is, how long you get to decide — and
+          every judgement about whether it is any fun belong to a human, and at
+          the time of writing that human has not yet run a single playtest with
+          anyone else. That is stated here because it is true, and because a
+          page that asks you to verify its claims should start by verifying its
+          own.
+        </p>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-links">
+          <a href="./index.html">The games</a>
+          <a href="https://github.com/jamessuuu/arcade" rel="noopener">Source code</a>
+        </div>
+        <p class="aj-attribution">
+          <svg class="aj-attribution__mark" viewBox="0 0 64 64" width="20" height="20" role="img" aria-label="Agent James"><path fill="currentColor" fill-rule="evenodd" d="M4 16h8v4h-8zM52 16h8v4h-8zM16 4h4v8h-4zM16 52h4v8h-4zM4 28h8v4h-8zM52 28h8v4h-8zM28 4h4v8h-4zM28 52h4v8h-4zM4 40h8v4h-8zM52 40h8v4h-8zM40 4h4v8h-4zM40 52h4v8h-4zM12 12h40v40h-40zM16 16v32h32v-32zM36 20h4v20h-16v-4h12z"/><rect x="20" y="20" width="4" height="4" fill="var(--aj-attribution-signal, #B45309)"/></svg>Built by <a href="https://agentjames.vercel.app" rel="me noopener">James Lorenz Santos</a><span class="aj-attribution__sep" aria-hidden="true">&middot;</span><a href="https://www.linkedin.com/in/james-lorenz-santos-720776251/" rel="me noopener" target="_blank">LinkedIn</a>
+        </p>
+      </footer>
+    </div>
+    <script type="module" src="./src/entry-parents.js"></script>
+  </body>
+</html>

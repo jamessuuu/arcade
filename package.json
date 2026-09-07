@@ -1,0 +1,32 @@
+{
+  "name": "arcade",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "A small house of focused games. Shared runtime, one game finished, nothing collected.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "verify": "node tests/run-all.mjs",
+    "verify:play": "node tests/play-harbor-watch.mjs",
+    "verify:gpu": "node tests/play-harbor-watch.mjs --gpu",
+    "verify:headed": "node tests/play-harbor-watch.mjs --headed",
+    "verify:network": "node tests/network-capture.mjs",
+    "verify:claims": "node tests/claims-check.mjs",
+    "verify:patterns": "node tests/dark-pattern-check.mjs",
+    "verify:a11y": "node tests/a11y-check.mjs",
+    "verify:budget": "node tests/bundle-budget.mjs",
+    "shots": "node tests/screenshots.mjs"
+  },
+  "dependencies": {
+    "pixi.js": "^8.6.6"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}

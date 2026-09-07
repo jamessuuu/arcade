@@ -1,0 +1,747 @@
+/* ============================================================================
+   arcade — the shell. Portal chrome, game chrome, and every menu.
+
+   One structural decision drives this whole file: EVERY menu, button, toggle
+   and results panel is real HTML, not canvas. Only the game world is drawn by
+   PixiJS. That is why the keyboard works everywhere, why a screen reader can
+   read the whole shell, why focus rings exist at all, and why the 44px target
+   floor is measurable from the DOM. Menus drawn into a canvas would have cost
+   all four and bought nothing.
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 900px) {
+  html,
+  body {
+    font-size: 18px;
+  }
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p {
+  margin: 0 0 var(--s-4);
+  max-width: var(--measure);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--s-3);
+  top: -100px;
+  z-index: 100;
+  background: var(--paper-raised);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: var(--s-3) var(--s-4);
+  font-family: var(--font-display);
+  transition: top 120ms ease;
+}
+.skip-link:focus {
+  top: var(--s-3);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Page frame ---------------------------------------------------------- */
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--s-5) var(--s-4) var(--s-8);
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: var(--s-5);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--s-6);
+}
+
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-decoration: none;
+}
+.brandmark svg {
+  flex: none;
+  display: block;
+}
+.brandmark h1,
+.brandmark .wordmark {
+  font-size: clamp(1.6rem, 1.1rem + 1.8vw, 2.3rem);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.tagline {
+  color: var(--ink-soft);
+  margin: var(--s-2) 0 0;
+  font-size: 1rem;
+  max-width: 46ch;
+}
+
+.header-nav {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+/* --- Buttons. Every one clears 44px in both axes. ------------------------ */
+
+.btn {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: var(--s-2) var(--s-5);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease,
+    transform 120ms ease;
+}
+.btn:hover {
+  background: var(--paper-sunk);
+  border-color: var(--ink-soft);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.btn--primary:hover {
+  background: var(--accent);
+  filter: brightness(1.08);
+  border-color: var(--accent);
+}
+.btn--big {
+  min-height: 56px;
+  font-size: 1.1rem;
+  padding: var(--s-3) var(--s-6);
+}
+.btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- The game grid ------------------------------------------------------- */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-4);
+}
+.section-head h2 {
+  font-size: 1.35rem;
+}
+.section-note {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-7);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  overflow: hidden;
+  transition: border-color 140ms ease, transform 140ms ease,
+    box-shadow 140ms ease;
+}
+.card--ready:hover,
+.card--ready:focus-within {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+.card__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--paper-sunk);
+  border-bottom: 1px solid var(--line);
+}
+.card__body {
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  flex: 1;
+}
+.card__title {
+  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+}
+.card__title a {
+  text-decoration: none;
+}
+.card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.card__teaser {
+  font-family: var(--font-data);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.card__line {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+.card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin: auto 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-family: var(--font-data);
+}
+.card__facts b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  align-self: flex-start;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+/* Status is carried by the word AND the outline shape, never by hue alone. */
+.badge--ready {
+  color: var(--good);
+}
+.badge--wip {
+  color: var(--ink-soft);
+  border-style: dashed;
+}
+.card--wip {
+  border-style: dashed;
+  background: var(--paper);
+}
+.card--wip .card__art {
+  opacity: 0.65;
+}
+
+/* --- Prose blocks (the parents page) ------------------------------------- */
+
+.prose {
+  max-width: var(--measure);
+}
+.prose h2 {
+  font-size: 1.4rem;
+  margin: var(--s-7) 0 var(--s-3);
+}
+.prose h3 {
+  font-size: 1.1rem;
+  margin: var(--s-5) 0 var(--s-2);
+}
+.prose ul,
+.prose ol {
+  margin: 0 0 var(--s-4);
+  padding-left: 1.3em;
+}
+.prose li {
+  margin-bottom: var(--s-2);
+}
+.prose code {
+  font-family: var(--font-data);
+  font-size: 0.88em;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.1em 0.35em;
+}
+.lede {
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--paper-raised);
+  padding: var(--s-4) var(--s-5);
+  margin: 0 0 var(--s-5);
+  max-width: var(--measure);
+}
+.panel > :last-child {
+  margin-bottom: 0;
+}
+.panel h3 {
+  margin-top: 0;
+}
+
+table.facts {
+  width: 100%;
+  max-width: var(--measure);
+  border-collapse: collapse;
+  margin: 0 0 var(--s-5);
+  font-size: 0.95rem;
+}
+table.facts th,
+table.facts td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--s-3) var(--s-3);
+  border-bottom: 1px solid var(--line);
+}
+table.facts th {
+  font-family: var(--font-display);
+  width: 34%;
+  color: var(--ink);
+}
+table.facts td {
+  color: var(--ink-soft);
+}
+
+/* --- Footer + attribution ------------------------------------------------ */
+
+.site-footer {
+  margin-top: var(--s-8);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+.site-footer p {
+  max-width: var(--measure);
+}
+.footer-links {
+  display: flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-4);
+}
+.footer-links a {
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* attribution-kit v1 — the maker's mark. Inherits `color`; the mark draws in
+   currentColor and takes its amber from --aj-attribution-signal. Not a flex
+   container on purpose: the links stay display:inline, which is the WCAG 2.5.8
+   inline-text exemption. */
+.aj-attribution {
+  margin: 0;
+  font: inherit;
+  line-height: 1.5;
+  color: inherit;
+}
+.aj-attribution__mark {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: -0.3em;
+  margin-right: 0.45em;
+}
+.aj-attribution__mark--full {
+  width: 48px;
+  height: 48px;
+  vertical-align: middle;
+}
+.aj-attribution a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.aj-attribution a:hover {
+  text-decoration-thickness: 2px;
+}
+.aj-attribution a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.aj-attribution__sep {
+  margin: 0 0.35em;
+}
+
+/* ==========================================================================
+   GAME SHELL — the surface a game is played inside.
+   ========================================================================= */
+
+body.playing {
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--stage-ground, oklch(0.14 0.03 250));
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--stage-ground, oklch(0.14 0.03 250));
+}
+
+.stage__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: oklch(0 0 0 / 0.28);
+  color: oklch(0.97 0.01 250);
+  border-bottom: 1px solid oklch(1 0 0 / 0.12);
+  min-height: 52px;
+}
+.stage__bar .btn {
+  background: oklch(1 0 0 / 0.1);
+  border-color: oklch(1 0 0 / 0.28);
+  color: inherit;
+  padding-inline: var(--s-3);
+}
+.stage__bar .btn:hover {
+  background: oklch(1 0 0 / 0.2);
+}
+.stage__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+  margin-right: auto;
+}
+.stage__canvas {
+  position: relative;
+  overflow: hidden;
+}
+.stage__canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* The hold pad: the entire canvas is the target on touch, but a visible pad is
+   drawn for people who need to see where to put a thumb. 44px is the floor;
+   this is far larger, deliberately. */
+.hold-pad {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(env(safe-area-inset-bottom, 0px), 14px);
+  width: min(360px, 72vw);
+  min-height: 76px;
+  border-radius: 999px;
+  border: 2px solid oklch(1 0 0 / 0.42);
+  background: oklch(1 0 0 / 0.08);
+  color: oklch(0.98 0.01 250);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color 90ms linear, border-color 90ms linear;
+}
+.hold-pad[data-held="true"] {
+  background: oklch(1 0 0 / 0.3);
+  border-color: oklch(1 0 0 / 0.85);
+}
+@media (pointer: fine) {
+  .hold-pad {
+    opacity: 0.55;
+  }
+  .hold-pad:hover,
+  .hold-pad[data-held="true"] {
+    opacity: 1;
+  }
+}
+
+/* --- Overlay panels: title, mode select, pause, settings, results -------- */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+  background: oklch(0.1 0.02 250 / 0.72);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+}
+.overlay[hidden] {
+  display: none;
+}
+
+.sheet {
+  width: min(620px, 100%);
+  background: var(--paper-raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  padding: var(--s-5);
+  margin: auto;
+}
+.sheet h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--s-2);
+}
+.sheet > p {
+  color: var(--ink-soft);
+}
+.sheet__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+
+.choices {
+  display: grid;
+  gap: var(--s-3);
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-3);
+  align-items: start;
+  width: 100%;
+  min-height: var(--tap);
+  text-align: left;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.choice:hover {
+  border-color: var(--accent);
+  background: var(--paper-sunk);
+}
+.choice[aria-pressed="true"] {
+  border-color: var(--accent);
+  border-width: 2px;
+  background: var(--accent-soft);
+}
+.choice__glyph {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+.choice__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  display: block;
+}
+.choice__desc {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  display: block;
+}
+
+/* --- Settings controls --------------------------------------------------- */
+
+.field {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.field:last-of-type {
+  border-bottom: 0;
+}
+.field__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+.field__hint {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  margin: 0;
+}
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.seg .btn {
+  padding-inline: var(--s-4);
+  font-size: 0.95rem;
+}
+input[type="range"] {
+  width: 100%;
+  min-height: var(--tap);
+  accent-color: var(--accent);
+}
+
+/* --- Results tally: shape carries meaning, colour only reinforces -------- */
+
+.tally {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
+  gap: var(--s-3);
+  margin: var(--s-4) 0;
+  padding: 0;
+  list-style: none;
+}
+.tally li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-3);
+  align-items: center;
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.tally svg {
+  width: 30px;
+  height: 30px;
+  flex: none;
+}
+.tally b {
+  font-family: var(--font-data);
+  font-size: 1.5rem;
+  display: block;
+  line-height: 1.1;
+}
+.tally span {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+
+.quay-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: var(--s-4) 0;
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-sunk);
+}
+.quay-strip svg {
+  width: 22px;
+  height: 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

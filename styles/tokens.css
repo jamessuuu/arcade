@@ -1,0 +1,144 @@
+/* ============================================================================
+   arcade — design tokens.
+
+   Legibility leads. This portal is read by seven-year-olds and by people with
+   presbyopia, so nothing here is small, thin, or low-contrast, and nothing
+   depends on hue to carry meaning.
+
+   Rules this file enforces:
+   - OKLCH throughout, so lightness is perceptual and contrast is predictable.
+   - Every text pair below clears 4.5:1. Tokens that do NOT clear it are named
+     `-faint` and are only ever used for hairlines and non-informational rules.
+   - `--tap` is the minimum interactive box. 44px. It is not negotiable and the
+     a11y checker measures it against the rendered DOM.
+   - No @font-face, no external font origin, no network request of any kind.
+     System stacks only. That is obligation 2 in the program, and it is why the
+     network capture comes back empty.
+   ========================================================================= */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- Faces. `--font-prose` is the reading face; body copy uses it. ------ */
+  --font-prose: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    "Times New Roman", serif;
+  --font-display: "Segoe UI Variable Display", ui-sans-serif, -apple-system,
+    "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-data: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo,
+    "Liberation Mono", monospace;
+
+  /* --- Ground and ink (light). ------------------------------------------- */
+  --paper: oklch(0.985 0.006 85);
+  --paper-raised: oklch(1 0 0);
+  --paper-sunk: oklch(0.955 0.008 82);
+  --ink: oklch(0.24 0.012 70);           /* 15.4:1 on --paper */
+  --ink-soft: oklch(0.44 0.015 70);      /*  5.2:1 on --paper */
+  --ink-faint: oklch(0.62 0.012 70);     /* decoration only, never text */
+  --line: oklch(0.87 0.008 80);          /* hairline */
+  --line-strong: oklch(0.66 0.012 80);
+
+  --accent: oklch(0.45 0.105 222);       /*  5.0:1 on --paper — harbour blue */
+  --accent-soft: oklch(0.93 0.03 222);
+  --accent-ink: oklch(0.99 0.005 222);
+
+  --warn: oklch(0.46 0.14 32);
+  --warn-soft: oklch(0.945 0.035 40);
+  --good: oklch(0.44 0.10 155);
+  --good-soft: oklch(0.94 0.035 155);
+
+  --focus: oklch(0.45 0.19 262);
+  --aj-attribution-signal: #b45309;
+
+  /* --- Measure and rhythm. ----------------------------------------------- */
+  --tap: 44px;                            /* WCAG 2.5.8 target minimum */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --measure: 66ch;
+
+  --shadow-lift: 0 1px 2px oklch(0.24 0.012 70 / 0.06),
+    0 6px 18px oklch(0.24 0.012 70 / 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: oklch(0.185 0.012 258);
+    --paper-raised: oklch(0.235 0.014 258);
+    --paper-sunk: oklch(0.145 0.012 258);
+    --ink: oklch(0.955 0.006 85);         /* 15.9:1 on --paper */
+    --ink-soft: oklch(0.79 0.011 85);     /*  7.8:1 on --paper */
+    --ink-faint: oklch(0.55 0.012 85);
+    --line: oklch(0.33 0.014 258);
+    --line-strong: oklch(0.50 0.016 258);
+
+    --accent: oklch(0.80 0.095 218);      /*  8.9:1 on --paper */
+    --accent-soft: oklch(0.30 0.05 218);
+    --accent-ink: oklch(0.16 0.02 218);
+
+    --warn: oklch(0.78 0.13 42);
+    --warn-soft: oklch(0.30 0.06 42);
+    --good: oklch(0.80 0.11 158);
+    --good-soft: oklch(0.28 0.05 158);
+
+    --focus: oklch(0.83 0.15 250);
+    --aj-attribution-signal: #f59e0b;
+
+    --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.4), 0 6px 18px oklch(0 0 0 / 0.35);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: oklch(0.185 0.012 258);
+  --paper-raised: oklch(0.235 0.014 258);
+  --paper-sunk: oklch(0.145 0.012 258);
+  --ink: oklch(0.955 0.006 85);
+  --ink-soft: oklch(0.79 0.011 85);
+  --ink-faint: oklch(0.55 0.012 85);
+  --line: oklch(0.33 0.014 258);
+  --line-strong: oklch(0.50 0.016 258);
+  --accent: oklch(0.80 0.095 218);
+  --accent-soft: oklch(0.30 0.05 218);
+  --accent-ink: oklch(0.16 0.02 218);
+  --warn: oklch(0.78 0.13 42);
+  --warn-soft: oklch(0.30 0.06 42);
+  --good: oklch(0.80 0.11 158);
+  --good-soft: oklch(0.28 0.05 158);
+  --focus: oklch(0.83 0.15 250);
+  --aj-attribution-signal: #f59e0b;
+  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.4), 0 6px 18px oklch(0 0 0 / 0.35);
+}
+
+/* High-contrast setting. A floor lift, not a theme: it raises every text pair
+   toward maximum and thickens every hairline, without changing the layout. */
+:root[data-contrast="high"] {
+  --ink: oklch(0.12 0 0);
+  --ink-soft: oklch(0.22 0 0);
+  --ink-faint: oklch(0.4 0 0);
+  --line: oklch(0.35 0 0);
+  --line-strong: oklch(0.15 0 0);
+  --paper: oklch(1 0 0);
+  --paper-raised: oklch(1 0 0);
+  --paper-sunk: oklch(0.96 0 0);
+  --accent: oklch(0.32 0.13 250);
+  --accent-soft: oklch(0.96 0.02 250);
+}
+
+:root[data-contrast="high"][data-theme="dark"],
+:root[data-contrast="high"][data-theme="system"]:is(.dark-preferred) {
+  --ink: oklch(1 0 0);
+  --ink-soft: oklch(0.93 0 0);
+  --paper: oklch(0.08 0 0);
+  --paper-raised: oklch(0.13 0 0);
+  --paper-sunk: oklch(0.04 0 0);
+  --line: oklch(0.62 0 0);
+  --line-strong: oklch(0.85 0 0);
+  --accent: oklch(0.88 0.11 218);
+  --accent-soft: oklch(0.22 0.05 218);
+}
