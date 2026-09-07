@@ -676,12 +676,15 @@ a {
 }
 
 /* ==========================================================================
-   NOTE PANEL — replaces `.panel { border-left: 4px solid var(--accent) }`.
+   NOTE PANEL. This block used to carry a thick accent bar down its left edge.
 
-   A thick coloured bar down one edge of a card is the most recognisable tell
-   of generated UI. The same job — "this block is set apart and has a status" —
-   is done here by a tinted ground and a single lit dot in the eyebrow, which
-   is the language the rest of the page already speaks.
+   A heavy coloured bar on one side of a card is the most recognisable tell of
+   generated UI, so it is gone. The same job, marking a block as set apart and
+   carrying a status, is done by a tinted ground plus a single lit dot in the
+   eyebrow, which is the language the rest of the page already speaks.
+
+   The declaration itself is deliberately not quoted here: while it was, the
+   design hook matched this comment and reported the defect it documents.
    ========================================================================= */
 
 .panel {
