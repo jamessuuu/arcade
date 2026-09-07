@@ -178,6 +178,66 @@ export async function run() {
       "a 13-digit epoch value would be a return-pressure primitive",
     );
 
+    // ---- ZERO WORDS ON THE CANVAS (pack row G13). --------------------
+    //
+    // Asserted two ways, because the interesting failure is a word that
+    // arrives later: a score readout, a "Level 2", a tutorial line. First,
+    // PixiJS's text classes are never imported at all, so a word CANNOT be
+    // drawn into the game surface. Second, the only control sitting over the
+    // canvas renders a glyph and carries its words in its accessible name,
+    // where a screen reader gets them and a reader of any age does not have
+    // to.
+    const TEXT_CLASS = [/\bnew Text\s*\(/, /\bBitmapText\b/, /\bHTMLText\b/];
+
+    // Prove the patterns can match before believing they found nothing.
+    // The first version of these three was written through a shell heredoc,
+    // which collapsed the escapes: every \b arrived as a literal BACKSPACE
+    // byte (0x08), so they could never match and the check reported a clean
+    // pass that meant precisely nothing. `cat -A` showing `^H` caught it.
+    const plantedText = ["const t = new Text({});", "new BitmapText()", "new HTMLText()"];
+    ok(
+      "the text-class patterns catch planted uses before being trusted",
+      plantedText.every((p) => TEXT_CLASS.some((r) => r.test(p))) &&
+        !TEXT_CLASS.some((r) => r.test("const g = new Graphics();")),
+    );
+
+    const srcFiles = [];
+    for await (const f of walk(join(ROOT, "src"))) srcFiles.push(f);
+    const textUse = [];
+    for (const f of srcFiles) {
+      const t = await readFile(f, "utf8");
+      if (TEXT_CLASS.some((r) => r.test(t))) textUse.push(relative(ROOT, f));
+    }
+    ok(
+      "no PixiJS text class is used anywhere, so no word can reach the canvas",
+      textUse.length === 0,
+      textUse.join(" "),
+    );
+
+    const padWords = await page.evaluate(() => {
+      const pad = document.querySelector("#holdPad");
+      return {
+        visibleText: (pad?.textContent ?? "").trim(),
+        accessibleName: pad?.getAttribute("aria-label") ?? "",
+        canvasAriaHidden: document.querySelector("canvas")?.getAttribute("aria-hidden"),
+      };
+    });
+    info("the hold pad", padWords);
+    ok(
+      "the only control over the canvas shows no word",
+      padWords.visibleText === "",
+      JSON.stringify(padWords.visibleText),
+    );
+    ok(
+      "but it still has an accessible name for a screen reader",
+      padWords.accessibleName.length > 4,
+      padWords.accessibleName,
+    );
+    ok(
+      "the canvas is hidden from assistive technology (the shell speaks for it)",
+      padWords.canvasAriaHidden === "true",
+    );
+
     // Obligation 6: no links out of a GAME.
     const links = await page.evaluate(() =>
       [...document.querySelectorAll("a[href]")].map((a) => a.getAttribute("href")),

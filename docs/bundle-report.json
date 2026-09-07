@@ -1,27 +1,27 @@
 {
-  "measuredAt": "2026-09-07T04:47:37.344Z",
+  "measuredAt": "2026-09-07T05:22:22.103Z",
   "budgetBytes": 2097152,
   "pages": {
     "/index.html": {
       "transferredBytes": 27854,
       "gzipEquivalentBytes": 7849,
       "requests": 2,
-      "loadMs": 15,
-      "interactiveMs": 15
+      "loadMs": 31,
+      "interactiveMs": 31
     },
     "/parents.html": {
       "transferredBytes": 34449,
       "gzipEquivalentBytes": 11937,
       "requests": 4,
-      "loadMs": 82,
-      "interactiveMs": 82
+      "loadMs": 24,
+      "interactiveMs": 24
     },
     "/harbor-watch.html": {
       "transferredBytes": 515739,
       "gzipEquivalentBytes": 154635,
       "requests": 12,
-      "loadMs": 82,
-      "interactiveMs": 444
+      "loadMs": 76,
+      "interactiveMs": 363
     }
   },
   "disk": {

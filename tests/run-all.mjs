@@ -14,6 +14,7 @@ import { dirname, join } from "node:path";
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 const SUITE = [
+  ["control-byte-sweep.mjs", [], "no silently-dead escapes anywhere"],
   ["spawn-floor.mjs", [], "fairness floors over 3000 generated shifts"],
   ["claims-check.mjs", [], "the claims gate"],
   ["dark-pattern-check.mjs", [], "the dark-pattern gate"],

@@ -217,10 +217,13 @@ npm run verify:gpu          # a real-time run on the real GPU
 | `verify:a11y` | 44px targets, contrast against *rendered* colours in light and dark and high-contrast, one h1, skip links, accessible names, keyboard traversal. |
 | `tests/spawn-floor.mjs` | 3000 generated shifts; no decision window under the floor, ever. |
 | `verify:budget` | The payload table above. |
+| `verify:bytes` | Sweeps every text file for stray control bytes. This exists because a regex written through a shell heredoc had its `` collapsed into a literal BACKSPACE byte, so the pattern matched nothing while its check reported a clean pass. A dead checker's silence is indistinguishable from a real pass, which is why several of these gates plant a violation in themselves first. |
 
-Two of these checkers **plant a violation in themselves first and fail if they
+Four of these checkers **plant a violation in themselves first and fail if they
 cannot find it**, because a checker that has never caught anything is
-indistinguishable from a checker whose pattern is broken.
+indistinguishable from a checker whose pattern is broken. That is not a
+hypothetical: it happened here, and `verify:bytes` is the guard that came out
+of it.
 
 ---
 

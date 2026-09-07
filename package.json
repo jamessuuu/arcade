@@ -21,6 +21,7 @@
     "verify:patterns": "node tests/dark-pattern-check.mjs",
     "verify:a11y": "node tests/a11y-check.mjs",
     "verify:budget": "node tests/bundle-budget.mjs",
+    "verify:bytes": "node tests/control-byte-sweep.mjs",
     "shots": "node tests/screenshots.mjs"
   },
   "dependencies": {

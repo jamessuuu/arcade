@@ -1,65 +1,65 @@
 {
-  "startedAt": "2026-09-07T05:08:48.741Z",
-  "timeScale": 1,
-  "mode": "headless=new on the hardware renderer",
-  "timeToInteractiveMs": 199,
+  "startedAt": "2026-09-07T05:22:27.028Z",
+  "timeScale": 6,
+  "mode": "SwiftShader software raster",
+  "timeToInteractiveMs": 385,
   "midRunPixels": {
     "width": 1280,
     "height": 800,
-    "mean": 52.77,
-    "stdev": 23.35,
+    "mean": 32.54,
+    "stdev": 22.29,
     "min": 6.3,
-    "max": 245.3,
-    "distinctColours": 590
+    "max": 245.2,
+    "distinctColours": 635
   },
-  "gpu": "ANGLE (AMD, AMD Radeon RX 9060 XT (0x00007590) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
   "frame": {
     "window": {
-      "samples": 600,
-      "p50": 5,
-      "p95": 5.1,
-      "max": 10,
-      "over33": 0,
-      "over16_7": 0
+      "samples": 493,
+      "p50": 83.3,
+      "p95": 183.3,
+      "max": 266.7,
+      "over33": 435,
+      "over16_7": 473
     },
     "wholeRun": {
-      "frames": 37716,
-      "over33": 1,
-      "over16_7": 1,
-      "worstMs": 135
+      "frames": 489,
+      "over33": 432,
+      "over16_7": 456,
+      "worstMs": 266.7
     }
   },
   "latency": {
     "method": "press-to-first-changed-rendered-frame (in-page proxy)",
-    "samples": 28,
-    "median": 10.4,
-    "p95": 14.7,
-    "max": 17.8
+    "samples": 26,
+    "median": 55.8,
+    "p95": 141,
+    "max": 189.9
   },
   "frameMeasurementValid": true,
   "audio": {
     "unlocked": true,
-    "cuesPlayed": 211,
+    "cuesPlayed": 197,
     "ctxState": "running"
   },
   "result": {
     "headline": "Dawn. The watch is over.",
-    "summary": "Every vessel judged correctly, from dusk to first light.",
+    "summary": "This is the harbour you kept tonight.",
     "quay": [
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
+      "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
@@ -75,16 +75,16 @@
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
       "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>"
     ],
-    "quayLabel": "28 lit lanterns for ships berthed, 0 unlit for ships you turned away by mistake, 0 crossed for ships that should not have been let in.",
+    "quayLabel": "23 lit lanterns for ships berthed, 5 unlit for ships you turned away by mistake, 0 crossed for ships that should not have been let in.",
     "tally": [
       {
         "glyph": "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#c2761b\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"#e0a13a\"/><circle cx=\"11\" cy=\"15\" r=\"3.4\" fill=\"#fff3d6\"/></svg>",
-        "value": 28,
+        "value": 23,
         "label": "berthed"
       },
       {
         "glyph": "<svg viewBox=\"0 0 22 26\" width=\"22\" height=\"26\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"18\" height=\"3\" fill=\"#7b8699\"/><path d=\"M4 24h14l-2-17H6z\" fill=\"none\" stroke=\"#7b8699\" stroke-width=\"2\"/></svg>",
-        "value": 0,
+        "value": 5,
         "label": "turned away by mistake"
       },
       {
@@ -101,15 +101,15 @@
     "bestLine": null,
     "modeName": "Standard",
     "durationMs": 194016.6666667076,
-    "accuracy": 100,
+    "accuracy": 90,
     "stats": {
-      "berthed": 28,
-      "missed": 0,
+      "berthed": 23,
+      "missed": 5,
       "fouled": 0,
       "turned": 24,
       "total": 52
     }
   },
   "consoleErrors": [],
-  "decisions": 52
+  "decisions": 50
 }

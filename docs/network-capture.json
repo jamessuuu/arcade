@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-07T04:42:52.568Z",
+  "recordedAt": "2026-09-07T05:18:58.984Z",
   "origin": "http://127.0.0.1:4319",
   "note": "Every request the browser made. 'phase' is loading while the page is still coming up, and playing from the moment the game was started. The claim on the parents page is that the playing phase is empty.",
   "pages": {
